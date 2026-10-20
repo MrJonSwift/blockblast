@@ -1,0 +1,44 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify the game logic
+        run: node tests/run.js
+
+      - uses: actions/configure-pages@v5
+
+      - name: Assemble the app shell
+        run: |
+          mkdir -p _site/js _site/icons
+          cp .nojekyll index.html styles.css sw.js manifest.webmanifest favicon.svg _site/
+          cp js/*.js _site/js/
+          cp icons/*.png _site/icons/
+          ls -R _site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.serve.log
+.serve.err
+shot-*.png
+_probe*.png
+.chrome-profile/
+_site/
+
+# Agent / session working notes — kept local, never published
+AGENTS.md
+context.md
+NEXT.md
+.scratch/
